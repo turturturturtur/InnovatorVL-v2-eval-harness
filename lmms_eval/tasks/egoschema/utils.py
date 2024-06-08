@@ -19,8 +19,7 @@ with open(Path(__file__).parent / "_default_template_yaml", "r") as f:
 
     config = yaml.safe_load("".join(safe_data))
 
-# A bit ugly here
-# But the idea is that we will unzip all the zip files
+# We will unzip all the zip files
 # To HF HOME cache dir
 # And load it here
 HF_HOME = os.environ["HF_HOME"]
@@ -69,18 +68,6 @@ def egoschema_doc_to_answer(doc):
     return doc["answer"]
 
 
-# If it is mc, keep the option for exact match
-def egoschema_doc_to_answer_mc(doc):
-    # return doc["answer"].split(".")[0].strip()
-    return doc["answer"]  # pseudo answer
-
-
-# If it is mc ppl, keep the option str for perplexity base matching
-def egoschema_doc_to_answer_mc_ppl(doc):
-    # return doc["answer"].split(".")[1].strip()
-    return doc["answer"]  # pseudo answer
-
-
 # Process result for mc_ppl
 def egoschema_process_results(doc, result):
     # Initialize minimum value and index
@@ -97,7 +84,7 @@ def egoschema_process_results(doc, result):
     return {"submission": {doc["video_idx"]: min_index}, "score": {"pred": min_index, "ground_truth": doc["answer"]}}
 
 
-# Process result for generation
+# Process result for mcq answer generation
 def egoschema_process_results_generation(doc, result):
     pred = result[0]  # string prediction "A", "B", "C", "D", or "E"
 
@@ -127,10 +114,6 @@ def egoschema_aggregate_submissions(results, args, task):
 
 
 # Factory into different aggregate
-def egoschema_aggregate_gen(results, args):
-    egoschema_aggregate_submissions(results, args, "GENERATION")
-
-
 def egoschema_aggregate_mc(results, args):
     egoschema_aggregate_submissions(results, args, "MC")
 
