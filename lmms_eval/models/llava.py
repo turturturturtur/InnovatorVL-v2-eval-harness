@@ -2,7 +2,7 @@ import torch
 
 torch.backends.cuda.matmul.allow_tf32 = True
 
-import logging
+
 import copy
 from tqdm import tqdm
 from datetime import timedelta
@@ -21,7 +21,7 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
-eval_logger = logging.getLogger("lmms-eval")
+from loguru import logger as eval_logger
 
 try:
     from llava.model.builder import load_pretrained_model
@@ -357,7 +357,6 @@ class Llava(lmms):
                 conv.append_message(conv.roles[1], None)
                 prompt_question = conv.get_prompt()
                 question_input.append(prompt_question)
-
 
             # input_ids = tokenizer_image_token(prompt, self.tokenizer, IMAGE_TOKEN_INDEX, return_tensors="pt").unsqueeze(0).to(self.device)
             # preconfigure gen_kwargs with defaults
