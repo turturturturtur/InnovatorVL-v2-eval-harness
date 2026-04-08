@@ -1,0 +1,57 @@
+{
+  "env": {
+    "hf_home": "/mnt/clusterfs/public_data/public_dataset/.cache/huggingface",
+    "hf_token": "",
+    "venv_path": "/mnt/clusterfs/evaluser/lmms-eval/.venv"
+  },
+  "log": {
+    "dir": "/mnt/clusterfs/evaluser/vllm_logs"
+  },
+  "distributed": {
+    "master_addr": "127.0.0.1",
+    "master_port": 23456,
+    "world_size": 1,
+    "rank": 0
+  },
+  "model": {
+    "path": "/mnt/clusterfs/evaluser/data/model/Qwen3-VL-8B-Instruct",
+    "tp": 1,
+    "max_model_len": 65536,
+    "gpu_memory_utilization": 0.8,
+    "max_num_seqs": 1024,
+    "base_port": 8001
+  },
+  "eval": {
+    "tasks": "mmmu_val_qwen3_official,mmmu_pro_standard_qwen3_official,wemath_testmini_qwen3,mathvision_reason_testmini_qwen3,mathvision_testmini_qwen3",
+    "output_path": "/mnt/clusterfs/evaluser/lmms-eval/eval_result",
+    "concurrency": 1024,
+    "verbosity": "DEBUG",
+    "max_new_tokens": 32768,
+    "max_pixels": 4014080,
+    "temperature": 1.0,
+    "top_p": 1.0,
+    "top_k": 40,
+    "gen_kwargs": "max_new_tokens=32768,temperature=1.0,top_p=1.0,top_k=40,presence_penalty=2.0",
+    "debug": true
+  },
+  "dlc": {
+    "binary": "/mnt/clusterfs/evaluser/dlc",
+    "run_script": "/mnt/workspace/wangcong/lmms-eval/examples/qwen3-vl/vllm_qwen3_vl_async_multi_gpu_with_judge.sh",
+    "workers": 16,
+    "worker_gpu": 8,
+    "worker_cpu": 110,
+    "worker_memory": "1500Gi",
+    "worker_shared_memory": "1500Gi",
+    "priority": 9,
+    "running_timeout": 86400,
+    "rdma": true,
+    "worker_image": "dsw-registry-vpc.cn-wulanchabu.cr.aliyuncs.com/pai/python:3.13.9-gpu-cu129-ubuntu22.04-9e1c8c7e-1764331625",
+    "data_source_uris": "cpfs://cpfs-298fffb575a502fe.cn-wulanchabu/ptc-29f47d9393ad2b16/exp-29f2869e7d984aa6/::/mnt/cpfs,oss://pai-wlcb-ai-oss.oss-cn-wulanchabu-internal.aliyuncs.com/::/mnt/oss",
+    "resource_id": "quotaev2tl4w6aw0",
+    "workspace_id": "000000",
+    "vpc_id": "vpc-placeholder000000000",
+    "switch_id": "vsw-0jlmr9rjzed093yr9c0kz",
+    "security_group_id": "sg-placeholder0000000000",
+    "extended_cidrs": "192.0.2.128/25,198.51.100.128/25,203.0.113.0/24"
+  }
+}
