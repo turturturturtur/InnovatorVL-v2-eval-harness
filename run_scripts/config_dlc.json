@@ -2,8 +2,8 @@
   "dlc": {
     "submit": true,
     "job_name": "test_eval_jobs",
-    "binary": "/mnt/clusterfs/evaluser/dlc",
-    "run_script": "/mnt/clusterfs/evaluser/lmms-eval/scripts/qwen3_vl_worker.sh",
+    "binary": "/mnt/clusterfs/<USER>/dlc",
+    "run_script": "/mnt/clusterfs/<USER>/lmms-eval/scripts/qwen3_vl_worker.sh",
     "workers": 2,
     "worker_gpu": 8,
     "worker_cpu": 110,
