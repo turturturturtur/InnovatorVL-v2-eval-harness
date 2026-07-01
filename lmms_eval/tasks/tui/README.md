@@ -47,6 +47,44 @@ uv run uvicorn lmms_eval.tui.server:app --host 0.0.0.0 --port 8000
 LMMS_SERVER_PORT=3000 uv run lmms-eval-ui
 ```
 
+## Local Authentication
+
+The Web UI requires AK/ASK login before any evaluation, DLC, task, or log API can be used. AK/ASK values are validated in real time by calling a read-only DLC API with the submitted credentials. The local plaintext file is only an admin allowlist:
+
+```text
+lmms-eval/local/webui_users.json
+```
+
+Create it from the example file:
+
+```bash
+cp local/webui_users.json.example local/webui_users.json
+```
+
+Admin file format:
+
+```json
+{
+  "admins": [
+    {
+      "username": "admin",
+      "display_name": "WebUI Admin",
+      "access_key_id": "admin-access-key-id"
+    }
+  ]
+}
+```
+
+Notes:
+
+- The default session lifetime is 15 days. Override with `LMMS_EVAL_WEBUI_SESSION_TTL_SECONDS`.
+- Override the user file path with `LMMS_EVAL_WEBUI_AUTH_FILE`.
+- Login validation uses `dlc get job --workspace_id 000000 --page_size 1 --page_num 1` with `--access_id`, `--access_key`, `--ignore_local_config`, `--region=cn-wulanchabu`, and `--endpoint=pai-dlc.cn-wulanchabu.aliyuncs.com`.
+- The browser receives only an HttpOnly session cookie. DLC submissions use the logged-in user's AK/ASK from the server session.
+- `role=admin` is returned by `/auth/me` only when the validated AccessKey ID appears in `admins`. Admin-only operations are reserved for future expansion.
+- Cross-origin frontend development is disabled by default. Set `LMMS_EVAL_WEBUI_ALLOWED_ORIGINS=http://localhost:5173` if you run Vite separately.
+- `local/webui_users.json` is ignored by git. It must not contain `secret_access_key`.
+
 ## Features
 
 - Model selection from all available models
@@ -62,6 +100,9 @@ LMMS_SERVER_PORT=3000 uv run lmms-eval-ui
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/health` | GET | Server health check |
+| `/auth/login` | POST | Login with AK/ASK from local user file |
+| `/auth/me` | GET | Return the current logged-in user |
+| `/auth/logout` | POST | Clear the current WebUI session |
 | `/models` | GET | List available models |
 | `/tasks` | GET | List available tasks |
 | `/eval/preview` | POST | Generate command preview |

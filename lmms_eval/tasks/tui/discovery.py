@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 
@@ -50,23 +51,43 @@ def _parse_task_yaml(yaml_path: Path) -> tuple[str, str] | None:
         if "task:" not in content and "group:" not in content:
             return None
 
-        config = yaml.safe_load(content)
-        if not isinstance(config, dict):
-            return None
+        try:
+            config = yaml.safe_load(content)
+        except Exception:
+            config = None
 
-        if "task" in config and isinstance(config["task"], str):
+        if isinstance(config, dict) and "task" in config and isinstance(config["task"], str):
             task_id = config["task"]
             display_name = _create_display_name(task_id, yaml_path)
             return (task_id, display_name)
 
-        if "group" in config and isinstance(config["group"], str):
+        if isinstance(config, dict) and "group" in config and isinstance(config["group"], str):
             group_id = config["group"]
+            display_name = _create_display_name(group_id, yaml_path, is_group=True)
+            return (group_id, display_name)
+
+        task_id = _extract_top_level_scalar(content, "task")
+        if task_id:
+            display_name = _create_display_name(task_id, yaml_path)
+            return (task_id, display_name)
+
+        group_id = _extract_top_level_scalar(content, "group")
+        if group_id:
             display_name = _create_display_name(group_id, yaml_path, is_group=True)
             return (group_id, display_name)
 
         return None
     except Exception:
         return None
+
+
+def _extract_top_level_scalar(content: str, key: str) -> str | None:
+    pattern = rf"(?m)^{re.escape(key)}\s*:\s*([\"']?)([^\"'\n#\[\]{{}}]+)\1\s*(?:#.*)?$"
+    match = re.search(pattern, content)
+    if not match:
+        return None
+    value = match.group(2).strip()
+    return value or None
 
 
 def _create_display_name(task_id: str, yaml_path: Path, is_group: bool = False) -> str:
