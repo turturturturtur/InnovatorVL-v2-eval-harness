@@ -76,10 +76,10 @@ run_scripts/
 ```json
 {
   "env": {
-    "hf_home": "/mnt/clusterfs/public_data/public_dataset/.cache/huggingface",
+    "hf_home": "/mnt/clusterfsB/public_data/public_dataset/.cache/huggingface",
     "hf_token": "",
-    "venv_path": "/mnt/clusterfs/<USER>/lmms-eval/.venv",
-    "lmms_eval_datasets_cache": "/tmp/lmms_eval_hf_datasets/root",
+    "venv_path": "/mnt/clusterfsB/<USER>/lmms-eval/.venv",
+    "lmms_eval_datasets_cache": "/mnt/clusterfsB/public_data/public_dataset/.cache/huggingface/datasets",
     "hf_datasets_offline": true,
     "transformers_offline": true,
     "api_type": "openai",
@@ -87,7 +87,7 @@ run_scripts/
     "openai_api_url": "https://yunwu.ai/v1/chat/completions"
   },
   "log": {
-    "dir": "/mnt/clusterfs/<USER>/vllm_logs"
+    "dir": "/mnt/clusterfsB/<USER>/vllm_logs"
   },
   "distributed": {
     "master_addr": "127.0.0.1",
@@ -96,7 +96,7 @@ run_scripts/
     "rank": 0
   },
   "model": {
-    "path": "/mnt/clusterfs/<USER>/data/model/Qwen3-VL-8B-Instruct",
+    "path": "/mnt/clusterfsB/<USER>/data/model/Qwen3-VL-8B-Instruct",
     "tp": 1,
     "max_model_len": 65536,
     "gpu_memory_utilization": 0.9,
@@ -105,7 +105,7 @@ run_scripts/
   },
   "eval": {
     "tasks": "ai2d,mmmu_val,mmbench_en_dev",
-    "output_path": "/mnt/clusterfs/<USER>/lmms-eval/eval_result",
+    "output_path": "/mnt/clusterfsB/<USER>/lmms-eval/eval_result",
     "concurrency": 128,
     "gen_kwargs": "max_new_tokens=32768,max_pixels=4014080,temperature=1.0",
     "limit": -1,
@@ -123,7 +123,7 @@ run_scripts/
 | `env.hf_home` | string | HuggingFace 缓存根目录 |
 | `env.hf_token` | string | HuggingFace Token（可选） |
 | `env.venv_path` | string | Python 虚拟环境路径 |
-| `env.lmms_eval_datasets_cache` | string | 数据集缓存本地路径（staging 目标目录） |
+| `env.lmms_eval_datasets_cache` | string | 显式 datasets cache；生产配置指向 CPFSB public 持久缓存 |
 | `env.hf_datasets_offline` | bool | 是否离线加载 datasets |
 | `env.transformers_offline` | bool | 是否离线加载 transformers |
 | `env.api_type` | string | Judge API 类型（如 openai） |
@@ -156,8 +156,8 @@ run_scripts/
   "dlc": {
     "submit": true,
     "job_name": "test_eval_jobs",
-    "binary": "/mnt/clusterfs/<USER>/dlc",
-    "run_script": "/mnt/clusterfs/<USER>/lmms-eval/scripts/qwen3_vl_worker.sh",
+    "binary": "/mnt/clusterfsB/<USER>/dlc",
+    "run_script": "/mnt/clusterfsB/<USER>/lmms-eval/scripts/qwen3_vl_worker.sh",
     "workers": 2,
     "worker_gpu": 8,
     "worker_cpu": 110,
@@ -166,8 +166,8 @@ run_scripts/
     "priority": 9,
     "running_timeout": 86400,
     "worker_image": "dsw-registry-vpc.cn-wulanchabu.cr.aliyuncs.com/...",
-    "data_source_uris": "cpfs://...::/mnt/cpfs,oss://...::/mnt/oss",
-    "resource_id": "quota1hdkwah70tk",
+    "data_source_uris": "cpfs://...::/mnt/clusterfsB,nas://nas-placeholder2.cn-wulanchabu.nas.aliyuncs.com/::/mnt/sharednasB,oss://...::/mnt/oss",
+    "resource_id": "quotaev2tl4w6aw0",
     "workspace_id": "000000",
     "vpc_id": "vpc-...",
     "switch_id": "vsw-...",
@@ -191,8 +191,8 @@ run_scripts/
 | `dlc.priority` | int | 作业优先级 |
 | `dlc.running_timeout` | int | 运行超时时间（秒） |
 | `dlc.worker_image` | string | Worker 容器镜像 |
-| `dlc.data_source_uris` | string | 数据挂载 URI（CPFS / OSS 等） |
-| `dlc.resource_id` | string | 资源配额 ID |
+| `dlc.data_source_uris` | string | 数据挂载 URI（CPFS / NAS / OSS 等），必须包含 `nas://nas-placeholder2.cn-wulanchabu.nas.aliyuncs.com/::/mnt/sharednasB` |
+| `dlc.resource_id` | string | 固定资源配额 ID，必须为 `quotaev2tl4w6aw0` |
 | `dlc.workspace_id` | string | 工作空间 ID |
 | `dlc.vpc_id` / `switch_id` / `security_group_id` | string | 网络与安全组配置 |
 | `dlc.extended_cidrs` | string | 扩展 CIDR 列表 |
@@ -202,12 +202,12 @@ run_scripts/
 ```json
 {
   "env": {
-    "hf_home": "/mnt/clusterfs/public_data/public_dataset/.cache/huggingface",
+    "hf_home": "/mnt/clusterfsB/public_data/public_dataset/.cache/huggingface",
     "hf_token": "",
-    "venv_path": "/mnt/clusterfs/<USER>/lmms-eval/.venv"
+    "venv_path": "/mnt/clusterfsB/<USER>/lmms-eval/.venv"
   },
   "log": {
-    "dir": "/mnt/clusterfs/<USER>/judge_logs"
+    "dir": "/mnt/clusterfsB/<USER>/judge_logs"
   },
   "judge": {
     "backend": "api",
@@ -218,7 +218,7 @@ run_scripts/
       "base_url": ""
     },
     "vllm": {
-      "model_path": "/mnt/clusterfs/public_data/public_model/Qwen3.5/Qwen3.5-27B",
+      "model_path": "/mnt/clusterfsB/public_data/public_model/Qwen3.5/Qwen3.5-27B",
       "tp": 4,
       "max_model_len": 32768,
       "gpu_memory_utilization": "0.9",
@@ -227,9 +227,9 @@ run_scripts/
     }
   },
   "eval": {
-    "input_result_path": "/mnt/clusterfs/<USER>/lmms-eval/eval_result/2026-04-12_18-59-25/Qwen3-VL-8B-Instruct",
+    "input_result_path": "/mnt/clusterfsB/<USER>/lmms-eval/eval_result/2026-04-12_18-59-25/Qwen3-VL-8B-Instruct",
     "tasks": "mmbench_en_dev,MolParse,sfe-en,mmmu_val_qwen3_official",
-    "output_path": "/mnt/clusterfs/<USER>/judge_results",
+    "output_path": "/mnt/clusterfsB/<USER>/judge_results",
     "verbosity": "INFO",
     "debug": true
   }
@@ -264,7 +264,7 @@ run_scripts/
 ### 基础用法
 
 ```bash
-cd /mnt/clusterfs/<USER>/lmms-eval
+cd /mnt/clusterfsB/<USER>/lmms-eval
 bash run_scripts/qwen3_vl_worker.sh run_scripts/config_eval.json
 ```
 
@@ -327,7 +327,7 @@ launch_vllm_backends() → 启动 NUM_BACKENDS 个 vLLM 进程
 ### 提交命令
 
 ```bash
-cd /mnt/clusterfs/<USER>/lmms-eval
+cd /mnt/clusterfsB/<USER>/lmms-eval
 bash run_scripts/qwen3_vl_submit.sh run_scripts/config_dlc.json run_scripts/config_eval.json
 ```
 
@@ -365,7 +365,7 @@ dlc submit pytorchjob --command="..."
 ### 运行 Judge
 
 ```bash
-cd /mnt/clusterfs/<USER>/lmms-eval
+cd /mnt/clusterfsB/<USER>/lmms-eval
 bash run_scripts/run_judge.sh run_scripts/config_judge.json
 ```
 
@@ -399,7 +399,7 @@ bash run_scripts/run_judge.sh run_scripts/config_judge.json
   "judge": {
     "backend": "vllm",
     "vllm": {
-      "model_path": "/mnt/clusterfs/public_data/public_model/Qwen3.5/Qwen3.5-27B",
+      "model_path": "/mnt/clusterfsB/public_data/public_model/Qwen3.5/Qwen3.5-27B",
       "tp": 4,
       "port": 8002
     }
