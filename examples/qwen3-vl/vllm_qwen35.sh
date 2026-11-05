@@ -2,7 +2,7 @@
 set -euo pipefail
 
 
-source /mnt/clusterfsB/evaluser/conda/etc/profile.d/conda.sh
+source /mnt/clusterfsA/user/evaluser/conda/etc/profile.d/conda.sh
 conda activate /mnt/clusterfs/evaluser/miniconda3/envs/lmms-eval
 
 MODEL="${MODEL:-/mnt/clusterfs/evaluser/data/model/Qwen3-VL-8B-Instruct}"
