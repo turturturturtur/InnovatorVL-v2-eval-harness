@@ -3,9 +3,9 @@
 #
 # Usage:
 #   bash lmms-eval/run_scripts/submit_qwen35_lmms_eval_dlc.sh \
-#     /mnt/clusterfsB/<USER>/models/Qwen3.5-9B \
+#     /mnt/sharednasA/<USER>/models/Qwen3.5-9B \
 #     EMVista \
-#     /mnt/clusterfsB/<USER>/lmms-eval/eval_result/qwen35_emvista \
+#     /mnt/sharednasA/<USER>/innovator/lmms-eval/eval_result/qwen35_emvista \
 #     -1 \
 #     off
 #
@@ -62,9 +62,7 @@ fi
 
 USER_NAME="${LMMS_EVAL_USER:-}"
 if [[ -z "${USER_NAME}" ]]; then
-    if [[ "${PROJECT_ROOT}" =~ ^/mnt/clusterfsB/([^/]+)/innovator$ ]]; then
-        USER_NAME="${BASH_REMATCH[1]}"
-    elif [[ "${PROJECT_ROOT}" =~ ^/mnt/clusterfs/([^/]+)/innovator$ ]]; then
+    if [[ "${PROJECT_ROOT}" =~ ^/mnt/clusterfsA/user/([^/]+)/innovator$ ]]; then
         USER_NAME="${BASH_REMATCH[1]}"
     else
         echo "[ERROR] Cannot infer user from PROJECT_ROOT=${PROJECT_ROOT}; set LMMS_EVAL_USER." >&2

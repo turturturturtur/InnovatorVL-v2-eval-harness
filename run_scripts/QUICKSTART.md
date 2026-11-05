@@ -12,7 +12,7 @@
 {
   "env": {
     "hf_home": "/path/to/huggingface/cache",
-    "venv_path": "/mnt/clusterfsB/<USER>/lmms-eval/.venv",
+    "venv_path": "/mnt/clusterfsA/user/<USER>/innovator/lmms-eval/.venv",
     "api_type": "openai",
     "openai_api_key": "sk-...",
     "openai_api_url": "https://yunwu.ai/v1/chat/completions"
@@ -26,7 +26,7 @@
   },
   "eval": {
     "tasks": "mme,mmmu_val",
-    "output_path": "/mnt/clusterfsB/<USER>/lmms-eval/eval_result",
+    "output_path": "/mnt/sharednasA/<USER>/innovator/lmms-eval/eval_result",
     "concurrency": 128,
     "gen_kwargs": "max_new_tokens=32768,temperature=1.0",
     "limit": -1,
@@ -48,7 +48,7 @@
 ```json
 {
   "dlc": {
-    "binary": "/mnt/clusterfsB/<USER>/dlc",
+    "binary": "/mnt/clusterfsA/user/<USER>/innovator/bin/dlc",
     "job_name": "eval_qwen3vl_tp1",
     "workers": 2,
     "worker_gpu": 8,
@@ -56,8 +56,8 @@
     "worker_memory": "1500Gi",
     "worker_shared_memory": "1500Gi",
     "worker_image": "your-registry/python:3.13.9-gpu-...",
-    "data_source_uris": "cpfs://...::/mnt/clusterfsB,nas://nas-placeholder2.cn-wulanchabu.nas.aliyuncs.com/::/mnt/sharednasB,oss://...::/mnt/oss",
-    "resource_id": "quotaev2tl4w6aw0",
+    "data_source_uris": "bmcpfs://cpfs-placeholder-vpc-suffix.cn-wulanchabu.cpfs.aliyuncs.com/user/evaluser/::/mnt/clusterfsA/user/evaluser,nas://nas-placeholder.cn-wulanchabu.nas.aliyuncs.com/::/mnt/sharednasA",
+    "resource_id": "quota0000000000000",
     "workspace_id": "your-workspace-id",
     "vpc_id": "vpc-...",
     "switch_id": "vsw-...",
@@ -69,8 +69,8 @@
 
 - **`dlc.binary`**：DLC CLI 可执行文件路径。
 - **`dlc.workers`** / **`worker_gpu`**：集群节点数和每节点 GPU 数。
-- **`dlc.data_source_uris`**：必须包含 `nas://nas-placeholder2.cn-wulanchabu.nas.aliyuncs.com/::/mnt/sharednasB`，否则 submitter 会拒绝提交。
-- **`resource_id`**：固定使用 `quotaev2tl4w6aw0`；**`workspace_id`** / **`vpc_id`** 等网络字段找你所在平台的管理员要。
+- **`dlc.data_source_uris`**：必须包含 `nas://nas-placeholder.cn-wulanchabu.nas.aliyuncs.com/::/mnt/sharednasA`，否则 submitter 会拒绝提交。
+- **`resource_id`**：固定使用 `quota0000000000000`；**`workspace_id`** / **`vpc_id`** 等网络字段找你所在平台的管理员要。
 
 ### 3. `config_judge.json` — Judge 配置（对答案进行打分/评判）
 
@@ -87,7 +87,7 @@
       "base_url": ""
     },
     "vllm": {
-      "model_path": "/mnt/clusterfsB/evaluser/innovator/models/Qwen3.5-9B",
+      "model_path": "/mnt/sharednasA/evaluser/models/Qwen3.5-9B",
       "tp": 8,
       "max_model_len": 40960,
       "gpu_memory_utilization": "0.88",
@@ -96,9 +96,9 @@
     }
   },
   "eval": {
-    "input_result_path": "/mnt/clusterfsB/<USER>/lmms-eval/eval_result/<timestamp>/Qwen3-VL-8B-Instruct",
+    "input_result_path": "/mnt/sharednasA/<USER>/innovator/lmms-eval/eval_result/<timestamp>/Qwen3-VL-8B-Instruct",
     "tasks": "mmbench_en_dev,mmmu_val",
-    "output_path": "/mnt/clusterfsB/<USER>/judge_results"
+    "output_path": "/mnt/clusterfsA/user/<USER>/judge_results"
   }
 }
 ```
@@ -116,7 +116,7 @@
 ### 运行评测
 
 ```bash
-cd /mnt/clusterfsB/<USER>/lmms-eval
+cd /mnt/clusterfsA/user/<USER>/innovator/lmms-eval
 bash run_scripts/qwen3_vl_worker.sh run_scripts/config_eval.json
 ```
 
@@ -129,24 +129,24 @@ bash run_scripts/qwen3_vl_worker.sh run_scripts/config_eval.json /path/to/anothe
 ```
 
 **本地日志在哪：**
-默认在 `/mnt/clusterfsB/<USER>/vllm_logs/<timestamp>/`，包含 `vllm_*.log` 和 `lmms_eval_*.log`。
+默认在 `/mnt/clusterfsA/user/<USER>/vllm_logs/<timestamp>/`，包含 `vllm_*.log` 和 `lmms_eval_*.log`。
 
 ### 运行 Judge
 
 ```bash
-cd /mnt/clusterfsB/<USER>/lmms-eval
+cd /mnt/clusterfsA/user/<USER>/innovator/lmms-eval
 bash run_scripts/run_judge.sh run_scripts/config_judge.json
 ```
 
 **Judge 日志在哪：**
-默认在 `/mnt/clusterfsB/<USER>/judge_logs/judge_<timestamp>/`，包含 `judge.log` 和（若使用 vLLM 后端）`vllm_judge_backend.log`。
+默认在 `/mnt/clusterfsA/user/<USER>/judge_logs/judge_<timestamp>/`，包含 `judge.log` 和（若使用 vLLM 后端）`vllm_judge_backend.log`。
 
 ---
 
 ## 提交到 DLC 集群
 
 ```bash
-cd /mnt/clusterfsB/<USER>/lmms-eval
+cd /mnt/clusterfsA/user/<USER>/innovator/lmms-eval
 bash run_scripts/qwen3_vl_submit.sh run_scripts/config_dlc.json run_scripts/config_eval.json
 ```
 
