@@ -7,12 +7,32 @@ const API_BASE = ''
 const USER_PLACEHOLDER = '<USERNAME>'
 const LEGACY_USER_PLACEHOLDER = '<USER>'
 const USER_PLACEHOLDERS = [USER_PLACEHOLDER, LEGACY_USER_PLACEHOLDER]
-const DEFAULT_DLC_PATH_TEMPLATE = `/mnt/clusterfsB/${USER_PLACEHOLDER}/dlc`
-const DEFAULT_MODEL_PATH_TEMPLATE = `/mnt/clusterfsB/${USER_PLACEHOLDER}/innovator/models/Qwen3.5-9B`
-const DEFAULT_OUTPUT_PATH_TEMPLATE = `/mnt/clusterfsB/${USER_PLACEHOLDER}/innovator/lmms-eval/eval_result/qwen35_9b_feishu20`
-const DEFAULT_LOCAL_JUDGE_MODEL_PATH = '/mnt/clusterfsB/evaluser/innovator/models/Qwen3.5-9B'
+const DEFAULT_DLC_PATH_TEMPLATE = `/mnt/clusterfsA/user/${USER_PLACEHOLDER}/innovator/bin/dlc`
+const DEFAULT_MODEL_PATH_TEMPLATE = `/mnt/sharednasA/${USER_PLACEHOLDER}/models/Qwen3.5-9B`
+const DEFAULT_OUTPUT_PATH_TEMPLATE = `/mnt/sharednasA/${USER_PLACEHOLDER}/innovator/lmms-eval/eval_result/qwen35_9b_feishu20`
+const DEFAULT_LOCAL_JUDGE_MODEL_PATH = '/mnt/sharednasA/evaluser/models/Qwen3.5-9B'
 const DEFAULT_JUDGE_API_URL = 'http://127.0.0.1:8000/v1'
 const DEFAULT_API_EVAL_URL = 'http://judge.internal.example.com/v1'
+function StorageStatus() {
+  const [storage, setStorage] = useState<{ quota: string; paths: { label: string; path: string; readable: boolean }[] } | null>(null)
+  const [error, setError] = useState('')
+  useEffect(() => {
+    fetch(`${API_BASE}/storage`).then(async response => {
+      if (!response.ok) throw new Error('Storage check failed')
+      setStorage(await response.json())
+    }).catch(error => setError(String(error)))
+  }, [])
+  return <details className="border border-neutral-200 p-3 text-xs">
+    <summary className="cursor-pointer font-medium">ClusterFS A · SharedNAS A{storage ? ` · ${storage.quota}` : ''}</summary>
+    {error && <p className="mt-2 text-red-600">{error}</p>}
+    {!storage && !error && <p className="mt-2">Checking paths…</p>}
+    {storage?.paths.map(item => <div key={item.label} className="mt-2">
+      <span className={item.readable ? 'text-emerald-700' : 'text-red-600'}>{item.readable ? '✓' : '✕'} {item.label}</span>
+      <div className="break-all font-mono text-neutral-500">{item.path}</div>
+    </div>)}
+  </details>
+}
+
 const PAGES = ['evaluate', 'logs', 'tasks'] as const
 
 type Page = typeof PAGES[number]
@@ -334,7 +354,7 @@ function restoreUserPlaceholder(text: string, previousUser: string) {
   const previous = previousUser.trim()
   if (!previous) return updated
 
-  for (const root of ['/mnt/clusterfs/', '/mnt/clusterfsB/']) {
+  for (const root of ['/mnt/clusterfsA/user/', '/mnt/sharednasA/']) {
     const previousPathSegment = new RegExp(`(${escapeRegExp(root)})${escapeRegExp(previous)}(/)`, 'g')
     updated = updated.replace(previousPathSegment, `$1${USER_PLACEHOLDER}$2`)
   }
@@ -348,7 +368,7 @@ function applyUserToText(text: string, nextUser: string, previousUser: string) {
   let updated = replaceUserPlaceholders(text, user)
   const previous = previousUser.trim()
   if (previous && previous !== user) {
-    for (const root of ['/mnt/clusterfs/', '/mnt/clusterfsB/']) {
+    for (const root of ['/mnt/clusterfsA/user/', '/mnt/sharednasA/']) {
       const previousPathSegment = new RegExp(`(${escapeRegExp(root)})${escapeRegExp(previous)}(/)`, 'g')
       updated = updated.replace(previousPathSegment, `$1${user}$2`)
     }
@@ -1547,6 +1567,7 @@ export default function App() {
 
             {configExpanded && (
               <div className="p-6 pt-0 space-y-4">
+                <StorageStatus />
                 <div className="group">
                   <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-1.5">Run Mode</label>
                   <Select
