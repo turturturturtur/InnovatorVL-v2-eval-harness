@@ -11,7 +11,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-LMMS_EVAL_ROOT="${PROJECT_ROOT}/lmms-eval"
+LMMS_EVAL_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 DEFAULT_DLC_RESOURCE_ID="quota0000000000000"
 BENCHMARK_DATASETS_CACHE="/mnt/sharednasA/evaluser/evaluation_cache/lmms_eval"
 
