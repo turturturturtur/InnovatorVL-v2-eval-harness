@@ -1,49 +1,65 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
-title: "LMMs-Eval: Accelerating the Development of Large Multimodal Models"
+message: "If you use this harness, please cite the InnovatorVL-v2 report and this software as below."
+title: "InnovatorVL-v2 Eval Harness"
 type: software
 authors:
-  - name: "MC Evil Team"
+  - name: "InnovatorVL-v2 Team"
 license: MIT
-version: "0.6.0"
-date-released: "2024-03-01"
-url: "https://github.com/EvolvingLMMs-Lab/lmms-eval"
-repository-code: "https://github.com/EvolvingLMMs-Lab/lmms-eval"
+version: "2.0.0"
+date-released: "2026-11-11"
+url: "https://github.com/turturturturtur/InnovatorVL-v2-eval-harness"
+repository-code: "https://github.com/turturturturtur/InnovatorVL-v2-eval-harness"
 keywords:
   - multimodal evaluation
-  - large language models
   - vision language models
   - benchmark
-  - evaluation framework
-preferred-citation:
-  type: article
-  title: "LMMs-Eval: Reality Check on the Evaluation of Large Multimodal Models"
-  authors:
-    - family-names: "Zhang"
-      given-names: "Kaichen"
-    - family-names: "Li"
-      given-names: "Bo"
-    - family-names: "Zhang"
-      given-names: "Peiyuan"
-    - family-names: "Pu"
-      given-names: "Fanyi"
-    - family-names: "Cahyono"
-      given-names: "Joshua Adrian"
-    - family-names: "Hu"
-      given-names: "Kairui"
-    - family-names: "Liu"
-      given-names: "Shuai"
-    - family-names: "Zhang"
-      given-names: "Yuanhan"
-    - family-names: "Yang"
-      given-names: "Jingkang"
-    - family-names: "Li"
-      given-names: "Chunyuan"
-    - family-names: "Liu"
-      given-names: "Ziwei"
-  year: 2024
-  url: "https://arxiv.org/abs/2407.12772"
-  identifiers:
-    - type: other
-      value: "arXiv:2407.12772"
-      description: "arXiv preprint"
+  - llm-as-a-judge
+  - evaluation harness
+  - reproducibility
+abstract: >-
+  The evaluation harness used to produce the benchmark numbers reported for
+  InnovatorVL-v2. Derived from LMMs-Eval (MIT License), it adds an
+  LLM-as-a-judge pipeline, a web console for launching and inspecting runs,
+  Alibaba Cloud PAI-DLC cluster submission, a storage and runtime contract, and
+  task- and backend-level correctness fixes.
+references:
+  - type: software
+    title: "LMMs-Eval: Accelerating the Development of Large Multimodal Models"
+    authors:
+      - name: "LMMs-Lab Evaluation Team"
+    license: MIT
+    url: "https://github.com/EvolvingLMMs-Lab/lmms-eval"
+    repository-code: "https://github.com/EvolvingLMMs-Lab/lmms-eval"
+  - type: article
+    title: "LMMs-Eval: Reality Check on the Evaluation of Large Multimodal Models"
+    authors:
+      - family-names: "Zhang"
+        given-names: "Kaichen"
+      - family-names: "Li"
+        given-names: "Bo"
+      - family-names: "Zhang"
+        given-names: "Peiyuan"
+      - family-names: "Pu"
+        given-names: "Fanyi"
+      - family-names: "Cahyono"
+        given-names: "Joshua Adrian"
+      - family-names: "Hu"
+        given-names: "Kairui"
+      - family-names: "Liu"
+        given-names: "Shuai"
+      - family-names: "Zhang"
+        given-names: "Yuanhan"
+      - family-names: "Yang"
+        given-names: "Jingkang"
+      - family-names: "Li"
+        given-names: "Chunyuan"
+      - family-names: "Liu"
+        given-names: "Ziwei"
+    year: 2024
+    url: "https://arxiv.org/abs/2407.12772"
+    identifiers:
+      - type: other
+        value: "arXiv:2407.12772"
+        description: "arXiv preprint"
+# TODO(paper): add the InnovatorVL-v2 report as a preferred-citation entry once
+# its arXiv id / DOI is available.

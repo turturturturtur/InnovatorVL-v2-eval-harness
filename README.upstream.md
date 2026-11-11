@@ -1,3 +1,8 @@
+> **Note** — this is the unmodified `README.md` of upstream
+> [LMMs-Eval](https://github.com/EvolvingLMMs-Lab/lmms-eval), kept here for reference.
+> For this harness (what we changed, how to reproduce our numbers, citation), see
+> [`README.md`](README.md).
+
 <p align="center" width="70%">
 <img src="https://i.postimg.cc/KvkLzbF9/WX20241212-014400-2x.png">
 </p>
